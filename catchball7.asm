@@ -36,7 +36,7 @@ INIT_VAR LDA    #48         . ASCII 的 '0'
 
 . --- 資料區 ---
 GT_TXT  BYTE    C'TIME: '   . 時間文字標籤 (6個字元)
-GO_TXT  BYTE    C'GAME OVER' . 勝利/結束文字標籤 (9個字元)
+GO_TXT  BYTE    C'YOU   WIN' . 勝利/結束文字標籤 (9個字元)
 LS_TXT  BYTE    C'YOU LOSE'  . ★ 新增：失敗文字標籤 (8個字元)
 
 . 將 T_VAL 拆分成三個獨立 Byte
@@ -86,10 +86,10 @@ IV_D    WORD    4000        . 備用的初始延遲數值
 D_VAL   WORD    4000        . 運行時的延遲數值
 F_COUNT WORD    0           . 接到飼料的累積數量
 SPEED_ST WORD   2           . 每接到幾顆要加速 (這裡設為 2)
-DEC_VAL WORD    200         . 每次加速要減少的延遲量 (數值越小越快)
+DEC_VAL WORD    500         . 每次加速要減少的延遲量 (數值越小越快)
 MIN_D   WORD    1000        . 設定一個最小延遲量，避免飼料快到接不到
 SEC_TIC WORD    0           . 偵測時間流逝的計數器
-SEC_LIM WORD    10          . 根據 DELAY 大小，決定多少個迴圈算一秒
+SEC_LIM WORD    14          . 根據 DELAY 大小，決定多少個迴圈算一秒
 
 . --- 小雞圖案 ---
 CH_IMG  BYTE    C'   \|/   '
@@ -241,7 +241,6 @@ FDRAW   . 1. 擦掉舊飼料
         LDX     FE_PTR
         LDA     #32
         STCH    0,X
-
         LDA     FETI
         COMP    #5
         JLT     CH_YTOP
@@ -316,7 +315,6 @@ CHECK   LDA     NFE_X
         . --- 執行加速 ---
         LDA     #0          . 歸零計數器，重新算下兩顆
         STA     F_COUNT
-        
         LDA     D_VAL       . 減少延遲數值
         SUB     DEC_VAL
         COMP    MIN_D       . 檢查是否快過頭了
